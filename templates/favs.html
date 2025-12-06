@@ -2,30 +2,35 @@
 
 {% block content %}
 
-<!-- favorite movies  -->
-{% if favMovieList %}
-
 <h1>Your Favorite Movies</h1>
 
+{% if favMovieList %}
 
-{% for movie in favMovieList %}
+<div class="movie-grid">
 
-<form action="/show-fav-movie" method="GET">
-    <li>{{movie.title}}</li>
-    <input type="hidden" name="id" value="{{movie.tmdb_id}}">
-    <button type="submit">More Info</button>
-</form>
+    {% for movie in favMovieList %}
+    <div class="movie-card">
 
-<form action="/delete_movie" method="GET">
-    <input type="hidden" name="id" value="{{movie.tmdb_id}}">
-    <button type="submit">Remove From Favorites</button>
-</form>
+        <h3>{{ movie.title }}</h3>
 
-{% endfor %}
+        <form action="/show-fav-movie" method="GET" style="margin-bottom: 10px;">
+            <input type="hidden" name="id" value="{{ movie.tmdb_id }}">
+            <button type="submit" class="btn">More Info</button>
+        </form>
+
+        <form action="/delete_movie" method="GET">
+            <input type="hidden" name="id" value="{{ movie.tmdb_id }}">
+            <button type="submit" class="btn" style="background: #c94a4a;">Remove</button>
+        </form>
+
+    </div>
+    {% endfor %}
+
+</div>
 
 {% else %}
 
-<h2>Sorry, You Have No Favorite Movies at This Time </h2>
+<h2>You don't have any favorite movies yet.</h2>
 
 {% endif %}
 

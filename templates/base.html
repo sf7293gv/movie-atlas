@@ -1,22 +1,22 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Movie App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie App</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/sakura.css/css/sakura.css" type="text/css">
-
+    <!-- Correct CSS path -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 
 <body>
-  <div>
-    <a href="/"><button>Home</button></a>
-    <a href="/favorites"><button>Favorite Movies</button></a>
-    <a href="/about"><button>About</button></a>
-  </div>
-  {% block content %}   <!-- A block that the child template will fill in -->
 
-  {% endblock %}
+    <div class="container">
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
 
 </body>
 </html>

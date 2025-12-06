@@ -1,52 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
-</head>
-<body>
-    {% extends "base.html" %}
-    {% block content %}
-    <h1>About the app</h1>
-    <h2>Latest Movie Releases Info App</h2>
+{% extends "base.html" %}
 
-    <h3> date created: November 2021</h3> 
-    <h3>created by</h3> 
-    <ul>
-        <li>Niko T. (<a href="https://github.com/ew3361zh">@ew3361zh</a>)</li>
-        <li>Mohammad Z. (<a href="https://github.com/sf7293gv">@sf7293gv</a>)</li>
-        <li>Abdifatah A. (<a href="https://github.com/3bdifatah">@3bdifatah</a>)</li>
-    </ul>
+{% block content %}
 
-    <h3>API</h3> 
-    <ul>
-        <li>[The Movie Database - TMDB](<a href="https://www.themoviedb.org/">https://www.themoviedb.org/</a>)</li>
-        <li>[The Open Movie Database - OMDB](<a href="https://www.omdbapi.com/">https://www.omdbapi.com/</a>)</li>
-        <li>[YouTube](<a href="https://developers.google.com/youtube/v3/docs/search/list">https://developers.google.com/youtube/v3/docs/search/list</a>)</li>
-    </ul>
-    <p>
-        Rendered to web app via Flask.
-        The top 20 latest movie theater releases in the US are queried from The Movie Database and presented to the user on the home page (index).
-        User clicks a button to get more info on one of the movies from this list and a host of information including an image of the movie poster, the director of the movie, some of the actors, the official movie trailer embedded YouTube video and more is all presented in a single page to the user. They have the option to add that movie to their favorites or search for info on another of the top 20 recent releases. User can then query a list of their favorites all collected in one page with the option to view the full movie info or to remove the movie from their favorites.
+<h1>About This Movie App</h1>
+
+<div class="trailer-box" style="margin-top: 25px;">
+
+    <p style="font-size: 17px; line-height: 1.6;">
+        Welcome to the Movie App — a simple, clean, modern web application 
+        designed to help you explore movies currently playing in theaters.
+        Browse trending titles, view detailed information, and save your favorites for later.
     </p>
 
-    <h3>To install and run</h3>
+    <h2 style="margin-top: 25px;">How It Works</h2>
 
-    <ol>
-        <li> Create a [YouTube API key](<a href="https://developers.google.com/youtube/registering_an_application">https://developers.google.com/youtube/registering_an_application</a>). Only need an API key.
-        <li> Create an environment variable **YOUTUBE_API** to hold your key.
-        <li> Create a [TMDB API key](<a href="https://developers.themoviedb.org/3/getting-started/authentication">https://developers.themoviedb.org/3/getting-started/authentication</a>).
-        <li> Create an environment variable **TMDB_KEY** to hold your key.
-        <li> Create a [OMDB API key](<a href="https://www.omdbapi.com/apikey.aspx">https://www.omdbapi.com/apikey.aspx</a>).
-        <li> Create an environment variable **OMDB_KEY** to hold your key.
+    <ul style="line-height: 1.8; font-size: 16px;">
+        <li><b>TMDB API</b> provides the list of movies currently playing.</li>
+        <li><b>OMDb API</b> supplies detailed movie information.</li>
+        <li><b>YouTube API</b> fetches official trailers.</li>
+        <li>Your favorite movies are saved locally in an internal database.</li>
+    </ul>
 
-        <li> Create and activate virtual environment using Python 3
-        <li> `pip install -r requirements.txt`
-        <li> `python main.py`
-    </ol>
-    <h3>App will be running on <a href="http://127.0.0.1:5000">http://127.0.0.1:5000</a></h3>
-</body>
-</html>
-{% endblock %} 
+    <h2 style="margin-top: 25px;">Features</h2>
+
+    <ul style="line-height: 1.8; font-size: 16px;">
+        <li>Clean, modern UI with responsive layout.</li>
+        <li>Movie details: Posters, cast, plot, ratings, and more.</li>
+        <li>Trailer viewing directly on the movie page.</li>
+        <li>Ability to add/remove movies from favorites.</li>
+    </ul>
+
+    <h2 style="margin-top: 25px;">Credits</h2>
+
+    <p style="font-size: 16px; line-height: 1.6;">
+        This app uses public APIs including 
+        <a href="https://www.themoviedb.org/" target="_blank">TMDB</a>, 
+        <a href="https://www.omdbapi.com/" target="_blank">OMDb</a>, and 
+        <a href="https://developers.google.com/youtube" target="_blank">YouTube Data API</a>.
+    </p>
+
+    <p style="margin-top: 20px; font-size: 16px;">
+        Built with ❤️ using Python, Flask, HTML, and CSS.
+    </p>
+
+</div>
+
+{% endblock %}

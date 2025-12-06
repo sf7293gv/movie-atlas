@@ -1,62 +1,91 @@
-import requests
 import os
-from pprint import pprint
-import main_helper
-from main import movie_cache_db
+import requests
 
-"""
-The Movie DB (https://www.themoviedb.org/?language=en-US) 
-"""
+tmdb_key = os.environ.get("TMDB_KEY")
 
-tmdb_key = os.environ.get('TMDB_KEY')
-tmdb_url = f'https://api.themoviedb.org/3/movie/now_playing?api_key={tmdb_key}&language=en-US&page=1&region=US'
+TMDB_BASE_URL = "https://api.themoviedb.org/3"
+TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/w500"
 
 
-""" This function will return a list movies from the api """
-def get_movie_titles():
-    
+def get_tmdb():
+    """Return a list of movies for the homepage."""
+    if not tmdb_key:
+        print("TMDB_KEY missing")
+        return []
+
+    url = f"{TMDB_BASE_URL}/movie/popular?api_key={tmdb_key}&language=en-US&page=1"
+
     try:
-        movies = movie_cache_db.check_cache()
-        
-        if movies:
+        res = requests.get(url).json()
+        if "results" not in res:
+            return []
 
-            return movies
-        else:
-            movie_json = get_movie_data_from_api()
-            if movie_json:
-                movie_list = add_titles_to_list(movie_json)
+        movies = []
 
-                #store it in cache
-                movie_cache_db.add_movie_list_cache(movie_list)
-                return movie_list
-            else:
-                pass
+        for m in res["results"]:
+            poster_path = m.get("poster_path")
+            poster_url = TMDB_IMAGE_BASE + poster_path if poster_path else None
 
+            movies.append({
+                "title": m.get("title"),
+                "release_date": m.get("release_date"),
+                "tmdb_id": m.get("id"),
+                "poster": poster_url,
+                "poster_path": poster_path  # raw path if needed
+            })
+
+        return movies
 
     except Exception as e:
-        return None, 'Error getting list of movies from cache and/or TMDB API' + str(e)
+        print("TMDB list error:", e)
+        return []
 
 
-def get_movie_data_from_api():
+def get_tmdb_full_details(tmdb_id):
+    """Return detailed TMDB data."""
+    if not tmdb_key:
+        print("TMDB_KEY missing")
+        return None
+
     try:
-        movie_data = requests.get(tmdb_url).json()
-        return movie_data, None
-    except Exception as e:
-        return None, 'Error connecting to TMBD API because' + str(e)
+        details = requests.get(
+            f"{TMDB_BASE_URL}/movie/{tmdb_id}?api_key={tmdb_key}&language=en-US"
+        ).json()
 
+        credits = requests.get(
+            f"{TMDB_BASE_URL}/movie/{tmdb_id}/credits?api_key={tmdb_key}&language=en-US"
+        ).json()
 
-def add_titles_to_list(movie_data):
+        # poster
+        poster_path = details.get("poster_path")
+        poster_url = TMDB_IMAGE_BASE + poster_path if poster_path else None
 
-    movie_list =[]  
-    results = movie_data[0]['results']
-    for movie in results:
-        title = movie['title']
-        release_date = movie['release_date'] # tmdb movie release dates come in format 'yyyy-mm-dd'
-        release_date_list = release_date.split('-') 
-        release_year = release_date_list[0]
-        tmdb_id = movie['id']
+        # director
+        director = "Unknown"
+        for person in credits.get("crew", []):
+            if person.get("job") == "Director":
+                director = person.get("name")
+                break
 
-        movie_list.append({'title': title, 'year': release_year, 'id': tmdb_id})
+        # cast
+        cast = credits.get("cast", [])
+        actor_1 = cast[0]["name"] if len(cast) > 0 else "Unknown"
+        actor_2 = cast[1]["name"] if len(cast) > 1 else "Unknown"
 
+        # genres
+        genres = ", ".join([g["name"] for g in details.get("genres", [])])
 
-    return movie_list
+        return {
+            "title": details.get("title"),
+            "release_date": details.get("release_date"),
+            "plot": details.get("overview"),
+            "genre": genres,
+            "poster": poster_url,
+            "poster_path": poster_path,
+            "director": director,
+            "actor_1": actor_1,
+            "actor_2": actor_2
+        }
+
+    except:
+        return None

@@ -1,23 +1,26 @@
 {% extends "base.html" %}
-
 {% block content %}
-
 
 <h1>Top Movies in Theaters This Week</h1>
 
-
-<h2>Click On A Movie to Learn More About It!</h2>
-
-<ol>
+<div class="movie-grid">
     {% for movie in movies %}
-    <form action="/get-movie" method="GET">
-        <li>{{movie.title}}</li>
-        <input type="hidden" name="id" value="{{movie.id}}">
-        <input type="hidden" name="year" value="{{movie.year}}">
-        <input type="hidden" name="title" value="{{movie.title}}">
-        <button type="submit">More Info</button>
-    </form>
+    <div class="movie-card">
+
+        <img src="{{ movie.poster }}" class="movie-poster" alt="Poster">
+
+        <h3>{{ movie.title }}</h3>
+        <p>{{ movie.release_date }}</p>
+
+        <a href="/selected_movie?title={{ movie.title }}
+            &release_date={{ movie.release_date }}
+            &tmdb_id={{ movie.tmdb_id }}
+            &poster={{ movie.poster }}">
+            <button>More Info</button>
+        </a>
+
+    </div>
     {% endfor %}
-</ol>
+</div>
 
 {% endblock %}

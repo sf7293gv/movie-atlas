@@ -1,26 +1,54 @@
-# Latest Movie Releases Info App
+# Movie Atlas — Movie Discovery Web App
 
-November 2021 create by Abdifatah A. (@3bdifatah), Mohammad Z. (@sf7293gv), and Niko T. (@ew3361zh)
+Movie Atlas is a movie discovery application where you can browse trending theatrical releases, explore cast and crew details, view posters, and watch official trailers — all in one place.
 
-Uses [The Movie Database - TMDB](https://www.themoviedb.org/) API, [The Open Movie Database - OMDB](https://www.omdbapi.com/) API, and the [YouTube](https://developers.google.com/youtube/v3/docs/search/list) API.
+It integrates data from multiple APIs to deliver a complete movie experience:
 
-Rendered to web app via Flask.
+- TMDB API → trending movies, posters, release dates
+- OMDb API → directors, actors, genres, plot
+- YouTube Data API → embedded trailers
 
-The top 20 latest movie theater releases in the US are queried from The Movie Database and presented to the user on the home page (index).
+Built with Flask, featuring a clean, modern UI inspired by TMDB and optimized for mobile.
 
-User clicks a button to get more info on one of the movies from this list and a host of information including an image of the movie poster, the director of the movie, some of the actors, the official movie trailer embedded YouTube video and more is all presented in a single page to the user. They have the option to add that movie to their favorites or search for info on another of the top 20 recent releases. User can then query a list of their favorites all collected in one page with the option to view the full movie info or to remove the movie from their favorites.
+## Features
 
-# To install and run
+Homepage — Top Theater Releases:
+- Fetches the top 20 movies currently in U.S. theaters from TMDB
+- Displays posters, titles, and release dates
+- Each movie links to a detailed page
 
-* Create a [YouTube API key](https://developers.google.com/youtube/registering_an_application). Only need an API key.
-* Create an environment variable **YOUTUBE_API** to hold your key.
-* Create a [TMDB API key](https://developers.themoviedb.org/3/getting-started/authentication).
-* Create an environment variable **TMDB_KEY** to hold your key.
-* Create a [OMDB API key](https://www.omdbapi.com/apikey.aspx).
-* Create an environment variable **OMDB_KEY** to hold your key.
+Movie Details Page includes:
+- Poster
+- Release date
+- Director
+- Cast
+- Genres
+- Plot
+- Embedded YouTube trailer
+- Add to Favorites button
 
-* Create and activate virtual environment using Python 3
-* `pip install -r requirements.txt`
-* `python main.py`
+Favorites System:
+- Add movies to a Favorites list
+- View all saved favorites
+- Remove favorites anytime
 
-App will be running on http://127.0.0.1:5000
+Works through:
+- Python
+- Flask
+- TMDB, OMDb, YouTube APIs
+
+## Installation
+
+Set environment variables:
+YOUTUBE_API=your_key
+TMDB_KEY=your_key
+OMDB_KEY=your_key
+
+Clone & run:
+git clone https://github.com/sf7293gv/movie-atlas
+cd movie-atlas
+python -m venv venv
+pip install -r requirements.txt
+python main.py
+
+Visit http://127.0.0.1:5000/

@@ -1,12 +1,21 @@
-cat_flask
-env
+# Python
 *.pyc
-__pycache__
-.vscode
-.idea
-scratch.py
-movies.sqlite
+__pycache__/
+env/
+venv/
+
+# Flask / App
 movie_app.log
 
+# SQLite database
+movies.sqlite
 
+# Editor / IDE
+.vscode/
+.idea/
 
+# Old project folder
+cat_flask/
+
+# Scratch files
+scratch.py

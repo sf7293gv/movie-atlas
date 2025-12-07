@@ -1,34 +1,43 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1>{{ movie_object.title }}</h1>
+<div class="page-header">
+    <h1>🎥 {{ movie_object.title }}</h1>
+</div>
 
-<div class="movie-detail-container">
+<div class="movie-detail-container fade-in">
 
-    {% if movie_object.poster %}
-    <img src="{{ movie_object.poster }}" class="movie-poster">
+    <!-- Poster -->
+    {% if movie_object.poster_path %}
+        <img src="https://image.tmdb.org/t/p/w500{{ movie_object.poster_path }}" 
+             class="movie-poster" 
+             alt="{{ movie_object.title }}">
     {% else %}
-    <p>No poster available</p>
+        <div class="no-poster-box">
+            <p>No poster available</p>
+        </div>
     {% endif %}
 
+    <!-- Movie Info -->
     <div class="movie-info">
-        <p><strong>Release Date:</strong> {{ movie_object.release_date }}</p>
-        <p><strong>Director:</strong> {{ movie_object.director }}</p>
-        <p><strong>Actors:</strong> {{ movie_object.actor_1 }}, {{ movie_object.actor_2 }}</p>
-        <p><strong>Genre:</strong> {{ movie_object.genre }}</p>
-        <p><strong>Plot:</strong> {{ movie_object.plot }}</p>
+        <p><strong>Release Date:</strong> {{ movie_object.release_date or "Unknown" }}</p>
+        <p><strong>Director:</strong> {{ movie_object.director or "Unknown" }}</p>
+        <p><strong>Actors:</strong> 
+            {{ movie_object.actor_1 or "N/A" }}
+            {% if movie_object.actor_2 %}, {{ movie_object.actor_2 }}{% endif %}
+        </p>
+        <p><strong>Genre:</strong> {{ movie_object.genre or "Unknown" }}</p>
+        <p><strong>Plot:</strong> {{ movie_object.plot or "No plot available." }}</p>
 
         {% if movie_object.youtube_id %}
         <div class="trailer-box">
-            <iframe width="420" height="315"
+            <iframe 
                 src="https://www.youtube.com/embed/{{ movie_object.youtube_id }}"
-                allowfullscreen></iframe>
+                allowfullscreen>
+            </iframe>
         </div>
         {% endif %}
-
-     
     </div>
-
 </div>
 
 {% endblock %}

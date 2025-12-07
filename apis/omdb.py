@@ -1,13 +1,54 @@
 import requests
 import os
-from pprint import pprint
 
-omdb_key = os.environ.get('OMDB_KEY')
+OMDB_API_KEY = os.environ.get("OMDB_KEY")
 
-def get_movie_data(title, release_year):  
-    try: 
-        omdb_url = f'http://www.omdbapi.com/?apikey={omdb_key}&t={title}&y={release_year}'
-        movie_data = requests.get(omdb_url).json()
-        return movie_data
+# -----------------------------------------
+# Get movie by Title + Year (fallback only)
+# -----------------------------------------
+def get_movie_data(title, release_year):
+    if not OMDB_API_KEY:
+        print("OMDB_KEY missing from environment!")
+        return None
+
+    try:
+        url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&t={title}"
+
+        if release_year:
+            url += f"&y={release_year}"
+
+        data = requests.get(url).json()
+
+        if data.get("Response") == "False":
+            return None
+
+        return data
+
     except Exception as e:
-        print('Can\'t fetch fact because', e)
+        print("OMDB title lookup failed:", e)
+        return None
+
+
+# -----------------------------------------
+# Get movie using IMDB ID (preferred method!)
+# -----------------------------------------
+def get_movie_by_imdb(imdb_id):
+    if not imdb_id:
+        return None
+
+    if not OMDB_API_KEY:
+        print("OMDB_KEY missing from environment!")
+        return None
+
+    try:
+        url = f"http://www.omdbapi.com/?apikey={OMDB_API_KEY}&i={imdb_id}"
+        data = requests.get(url).json()
+
+        if data.get("Response") == "False":
+            return None
+
+        return data
+
+    except Exception as e:
+        print("OMDB IMDb lookup failed:", e)
+        return None

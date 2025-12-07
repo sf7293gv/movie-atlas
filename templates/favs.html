@@ -1,27 +1,32 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 <h1>Your Favorite Movies</h1>
 
-{% if favMovieList %}
+{% if favorite_movies %}
 
 <div class="movie-grid">
 
-    {% for movie in favMovieList %}
+    {% for movie in favorite_movies %}
     <div class="movie-card">
 
-        <h3>{{ movie.title }}</h3>
+        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
 
-        <form action="/show-fav-movie" method="GET" style="margin-bottom: 10px;">
-            <input type="hidden" name="id" value="{{ movie.tmdb_id }}">
-            <button type="submit" class="btn">More Info</button>
-        </form>
+        <div class="movie-title">{{ movie.title }}</div>
+        <div class="movie-date">{{ movie.release_date }}</div>
 
-        <form action="/delete_movie" method="GET">
-            <input type="hidden" name="id" value="{{ movie.tmdb_id }}">
-            <button type="submit" class="btn" style="background: #c94a4a;">Remove</button>
-        </form>
+        <!-- More Info Button -->
+        <a class="btn"
+           href="/selected_movie?title={{ movie.title }}&release_date={{ movie.release_date }}&tmdb_id={{ movie.tmdb_id }}&poster_path={{ movie.poster_path }}">
+            More Info
+        </a>
+
+        <!-- Delete Favorite -->
+        <a class="btn" 
+           href="/delete_favorite?tmdb_id={{ movie.tmdb_id }}"
+           style="background-color:#d9534f; margin-top:8px;">
+            Remove
+        </a>
 
     </div>
     {% endfor %}

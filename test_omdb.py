@@ -1,20 +1,30 @@
-import os
 import requests
+import os
+from pprint import pprint
 
-api_key = os.getenv("OMDB_API_KEY")
-if not api_key:
-    print("OMDB_API_KEY environment variable not set.")
-    exit(1)
+OMDB_KEY = os.environ.get("OMDB_KEY")
 
-# Example movie: "Inception"
-url = f"http://www.omdbapi.com/?apikey={api_key}&t=Inception"
-response = requests.get(url)
-
-if response.status_code == 200:
-    data = response.json()
-    if data.get('Response') == 'True':
-        print("OMDb API works! Movie title:", data.get('Title'))
+def test_movie(title, year=None):
+    if year:
+        url = f"http://www.omdbapi.com/?t={title}&y={year}&apikey={OMDB_KEY}"
     else:
-        print("OMDb API error:", data.get('Error'))
-else:
-    print(f"OMDb API error: {response.status_code}")
+        url = f"http://www.omdbapi.com/?t={title}&apikey={OMDB_KEY}"
+
+    print("\n====================================")
+    print(f"Testing OMDb for: {title} ({year})")
+    print("URL:", url)
+    print("====================================")
+
+    response = requests.get(url).json()
+    pprint(response)
+
+    if response.get("Response") == "False":
+        print("❌ OMDb could not find this movie.")
+    else:
+        print("✅ OMDb data successfully returned!")
+
+if __name__ == "__main__":
+    # Try any movie you want
+    test_movie("Zootopia 2", "2025")
+    test_movie("Inception", "2010")
+    test_movie("Kantara", "2022")

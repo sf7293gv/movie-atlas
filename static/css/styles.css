@@ -19,6 +19,43 @@ body {
     padding: 25px 0;
 }
 
+/* ================================================
+   NAVBAR
+================================================ */
+
+.navbar {
+    background: #123067;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 25px;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin-left: 18px;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+/* ================================================
+   FOOTER
+================================================ */
+
+.footer {
+    margin-top: 50px;
+    padding: 18px;
+    text-align: center;
+    background: #123067;
+    color: white;
+    font-size: 14px;
+}
 
 /* ================================================
    HEADINGS
@@ -38,7 +75,6 @@ h2, h3 {
     font-weight: bold;
 }
 
-
 /* ================================================
    BUTTONS
 ================================================ */
@@ -47,7 +83,7 @@ button, .btn {
     background-color: #1f76d1;
     border: none;
     padding: 10px 18px;
-    border-radius: 20px;     /* premium rounded look */
+    border-radius: 20px;
     color: white;
     cursor: pointer;
     font-weight: 600;
@@ -60,7 +96,6 @@ button:hover, .btn:hover {
     transform: translateY(-2px);
 }
 
-
 /* ================================================
    MOVIE GRID (Homepage)
 ================================================ */
@@ -70,7 +105,7 @@ button:hover, .btn:hover {
     grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: 28px;
     margin-top: 30px;
-    justify-items: center; /* centers cards evenly */
+    justify-items: center;
 }
 
 .movie-card {
@@ -96,8 +131,6 @@ button:hover, .btn:hover {
     box-shadow: 0 4px 14px rgba(0,0,0,0.2);
 }
 
-
-/* Movie titles + date */
 .movie-title {
     margin-top: 10px;
     font-size: 17px;
@@ -109,7 +142,6 @@ button:hover, .btn:hover {
     color: #666;
     margin: 6px 0 10px;
 }
-
 
 /* ================================================
    MOVIE DETAILS PAGE
@@ -141,7 +173,6 @@ button:hover, .btn:hover {
     color: #0d1b2a;
 }
 
-
 /* ================================================
    TRAILER BOX
 ================================================ */
@@ -162,23 +193,72 @@ iframe {
     border: none;
 }
 
-
 /* ================================================
-   HOME + MOVIE DETAILS LINKS
+   AI HELP CHAT UI
 ================================================ */
 
-.back-link {
-    display: inline-block;
-    margin-top: 20px;
-    color: #1f76d1;
-    font-weight: bold;
-    text-decoration: none;
+/* Chat container */
+.ai-chat-box {
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+    padding: 20px;
+    height: 380px;
+    overflow-y: auto;
+    border: 1px solid #e1e4eb;
+    margin-bottom: 20px;
+    scroll-behavior: smooth;
 }
 
-.back-link:hover {
-    text-decoration: underline;
+/* Bot message bubble */
+.bot-message {
+    background: #1f76d1;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 12px 12px 12px 4px;
+    margin-bottom: 12px;
+    max-width: 75%;
+    font-size: 15px;
 }
 
+/* User message bubble */
+.user-message {
+    background: #e1e8f5;
+    color: #0d1b2a;
+    padding: 12px 16px;
+    border-radius: 12px 12px 4px 12px;
+    margin-bottom: 12px;
+    max-width: 75%;
+    margin-left: auto;
+    text-align: right;
+    font-size: 15px;
+}
+
+/* Typing indicator */
+.typing {
+    opacity: 0.7;
+    font-style: italic;
+}
+
+/* Input area */
+.ai-input-area {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.ai-input-area input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #cfd6e2;
+    font-size: 15px;
+}
+
+.ai-input-area input:focus {
+    outline: none;
+    border-color: #1f76d1;
+}
 
 /* ================================================
    MOBILE RESPONSIVE
@@ -201,5 +281,9 @@ iframe {
 
     .movie-grid {
         grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    }
+
+    .ai-chat-box {
+        height: 300px;
     }
 }

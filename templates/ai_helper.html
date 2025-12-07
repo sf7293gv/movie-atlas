@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>🎬 Movie Suggester</h1>
+<p>Ask for a recommendation! (Try: “Suggest an action movie” or “I want something funny.”)</p>
+
+<div class="ai-chat-box" id="chat-box">
+    <div class="bot-message">Hello! Tell me what kind of movie you're in the mood for 😊</div>
+</div>
+
+<div class="ai-input-area">
+    <input id="user-input" type="text" placeholder="Tell me what you feel like watching...">
+    <button id="send-btn">Send</button>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const sendBtn = document.getElementById("send-btn");
+    const userInput = document.getElementById("user-input");
+    const chatBox = document.getElementById("chat-box");
+
+    function addMessage(text, sender) {
+        let msg = document.createElement("div");
+        msg.className = sender === "user" ? "user-message" : "bot-message";
+	msg.innerHTML = text;
+        chatBox.appendChild(msg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function addTyping() {
+        let typing = document.createElement("div");
+        typing.id = "typing-indicator";
+        typing.className = "bot-message typing";
+        typing.textContent = "MovieBot is typing…";
+        chatBox.appendChild(typing);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function removeTyping() {
+        let t = document.getElementById("typing-indicator");
+        if (t) t.remove();
+    }
+
+    // ---- SEND MESSAGE FUNCTION (used by both button + Enter key)
+    function sendMessage() {
+        const text = userInput.value.trim();
+        if (!text) return;
+
+        addMessage(text, "user");
+        userInput.value = "";
+
+        addTyping();
+
+        fetch("/ai_helper_response", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({message: text})
+        })
+        .then(res => res.json())
+        .then(data => {
+            removeTyping();
+            addMessage(data.reply, "bot");
+        });
+    }
+
+    // ---- Click Send
+    sendBtn.addEventListener("click", sendMessage);
+
+    // ---- Press Enter to Send
+    userInput.addEventListener("keypress", function (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();  // Prevents form submit refresh
+            sendMessage();
+        }
+    });
+});
+</script>
+
+{% endblock %}

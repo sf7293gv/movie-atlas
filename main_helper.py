@@ -1,97 +1,52 @@
 from apis import omdb, tmdb, youtube_api
 from create_new_movie import create_new_movie
 
-def assemble_selected_movie_data(title, year, tmdb_id):
-    """
-    Assemble movie data by fetching OMDB, TMDB (full details) and YouTube trailer.
-    This function returns a movie object (Favorite model) or None.
-    """
 
-    # Basic validation
-    if not title:
-        print("assemble_selected_movie_data: missing title")
-        return None
+def assemble_selected_movie_data(title, release_date, tmdb_id):
+    """Return a fully assembled movie object using TMDB + OMDB + YouTube."""
 
-    # Try OMDB first (may return None)
-    try:
-        movie_details = omdb.get_movie_data(title, year)
-    except Exception as e:
-        print("assemble_selected_movie_data: OMDB fetch error:", e)
-        movie_details = None
-
-    # Safely get TMDB full details if id supplied
-    tmdb_details = None
-    if tmdb_id:
-        try:
-            tmdb_details = tmdb.get_tmdb_full_details(tmdb_id)
-        except Exception as e:
-            print("assemble_selected_movie_data: TMDB fetch error:", e)
-            tmdb_details = None
-    else:
-        print("assemble_selected_movie_data: no tmdb_id provided")
-
-    # YouTube trailer (best-effort)
-    try:
-        vid_title, vid_id = youtube_api.movie_trailer(title)
-    except Exception as e:
-        print("assemble_selected_movie_data: YouTube fetch error:", e)
-        vid_title, vid_id = None, None
-
-    # If we have neither OMDB nor TMDB details, we can't build the movie
-    if not movie_details and not tmdb_details:
-        print("assemble_selected_movie_data: no OMDB and no TMDB data available")
-        return None
-
-    # create_new_movie will accept optional tmdb_details via tmdb_id;
-    # keep passing tmdb_id so create_new_movie may call TMDB if needed.
-    new_movie = create_new_movie(movie_details, vid_id, vid_title, tmdb_id, tmdb_details=tmdb_details)
-    return new_movie
-
-
-def assemble_favorite_movie_object(title, date, tmdb_id):
-    """
-    For favorites stored in the DB: use the provided date (string), extract year,
-    fetch OMDB/TMDB/YouTube as available and build Favorite object.
-    """
     if not title:
         return None
 
-    # Attempt to extract a year from the stored date string (if present)
+    # Extract year from release_date for OMDB lookup
     try:
-        date_parts = date.split()
-        year = date_parts[-1] if date_parts else None
-    except Exception:
+        year = release_date.split("-")[0]
+    except:
         year = None
 
-    # OMDB
+    # --- Fetch OMDB ---
     try:
-        movie_details = omdb.get_movie_data(title, year)
+        omdb_data = omdb.get_movie_data(title, year)
+        if omdb_data and omdb_data.get("Response") == "False":
+            omdb_data = None
     except Exception as e:
-        print("assemble_favorite_movie_object: OMDB fetch error:", e)
-        movie_details = None
+        print("OMDB error:", e)
+        omdb_data = None
 
-    # TMDB
-    tmdb_details = None
-    if tmdb_id:
-        try:
-            tmdb_details = tmdb.get_tmdb_full_details(tmdb_id)
-        except Exception as e:
-            print("assemble_favorite_movie_object: TMDB fetch error:", e)
-            tmdb_details = None
-
-    # YouTube
+    # --- Fetch TMDB full details ---
     try:
-        vid_title, vid_id = youtube_api.movie_trailer(title)
+        tmdb_details = tmdb.get_tmdb_full_details(tmdb_id)
     except Exception as e:
-        print("assemble_favorite_movie_object: YouTube fetch error:", e)
-        vid_title, vid_id = None, None
+        print("TMDB error:", e)
+        tmdb_details = None
 
-    if not movie_details and not tmdb_details:
+    # --- YouTube trailer ---
+    try:
+        yt_title, yt_id = youtube_api.movie_trailer(title)
+    except Exception:
+        yt_title, yt_id = None, None
+
+    # If we at least have TMDB or OMDB, create the movie object
+    if not omdb_data and not tmdb_details:
+        print("No movie data available from OMDB or TMDB for:", title)
         return None
 
-    favorite = create_new_movie(movie_details, vid_id, vid_title, tmdb_id, tmdb_details=tmdb_details)
-    return favorite
+    movie = create_new_movie(
+        omdb_data,
+        yt_id,
+        yt_title,
+        tmdb_id,
+        tmdb_details=tmdb_details
+    )
 
-
-def show_add_to_favorites_button(favorite):
-    return not bool(favorite)
+    return movie

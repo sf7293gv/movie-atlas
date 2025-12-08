@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function addMessage(text, sender) {
         let msg = document.createElement("div");
         msg.className = sender === "user" ? "user-message" : "bot-message";
-	msg.innerHTML = text;
+        msg.innerHTML = text;
         chatBox.appendChild(msg);
         chatBox.scrollTop = chatBox.scrollHeight;
     }
@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (t) t.remove();
     }
 
-    // ---- SEND MESSAGE FUNCTION (used by both button + Enter key)
     function sendMessage() {
         const text = userInput.value.trim();
         if (!text) return;
@@ -55,25 +54,29 @@ document.addEventListener("DOMContentLoaded", function () {
         fetch("/ai_helper_response", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({message: text})
+            body: JSON.stringify({ message: text })
         })
         .then(res => res.json())
         .then(data => {
             removeTyping();
-            addMessage(data.reply, "bot");
+            addMessage(data.reply || "Oops! I couldn't get a response 😅", "bot");
+        })
+        .catch(err => {
+            console.error("Chat Error:", err);
+            removeTyping();
+            addMessage("⚠️ Something went wrong. Try again!", "bot");
         });
     }
 
-    // ---- Click Send
     sendBtn.addEventListener("click", sendMessage);
 
-    // ---- Press Enter to Send
     userInput.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
-            e.preventDefault();  // Prevents form submit refresh
+            e.preventDefault();
             sendMessage();
         }
     });
+
 });
 </script>
 

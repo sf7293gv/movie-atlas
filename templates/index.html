@@ -15,7 +15,10 @@
         <div class="movie-date">{{ movie.release_date }}</div>
 
         <a class="btn"
-           href="/selected_movie?title={{ movie.title }}&release_date={{ movie.release_date }}&tmdb_id={{ movie.tmdb_id }}&poster_path={{ movie.poster_path }}">
+           href="/selected_movie?title={{ movie.title | urlencode }}
+           &release_date={{ movie.release_date }}
+           &tmdb_id={{ movie.id }}
+           &poster_path={{ movie.poster_path | urlencode }}">
             More Info
         </a>
     </div>
